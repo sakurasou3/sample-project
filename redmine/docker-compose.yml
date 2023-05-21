@@ -1,0 +1,26 @@
+version: '3'
+
+volumes:
+  redmine:
+    driver: local
+
+services:
+  redmine:
+    image: redmine
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_PASSWORD: root
+      REDMINE_SECRET_KEY_BASE: secretkey
+    depends_on:
+      - db
+  db:
+    build: ./db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: redmine
+    volumes:
+      - redmine:/var/lib/mysql
